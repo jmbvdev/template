@@ -1,0 +1,14 @@
+# template
+
+config.env
+NODE_ENV=development
+PORT=4000
+
+
+DB=academloStore
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=1234
+
+JWT_SECRET=aec887d38a7e4d51f801cb067acc8bbe71b795240453e69b87296d93e7cb1a9bcc052774dfe1040d2c4b12479467ae69987ece97e1bad763a4e5974192e4f993
+JWT_EXPIRES_IN=365d
