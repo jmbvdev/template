@@ -1,14 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-
-// Controllers
-const { globalErrorHandler } = require('./controllers/errors.controller');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
 // Routers
-const { usersRouter } = require('./routes/users.routes');
+const { usersRouter } = require('./routers/users.routes');
+const { repairsRouter } = require('./routers/repairs.routes');
 
-// Init express app
+const { globalErrorHandler } = require('./controllers/error.controller');
+
 const app = express();
 
 // Enable CORS
@@ -17,6 +19,19 @@ app.use(cors());
 // Enable incoming JSON data
 app.use(express.json());
 
+//Add security helmet
+app.use(helmet());
+
+// Compress responses
+app.use(compression());
+
+// Log incoming requests
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
+
 // Limit IP requests
 const limiter = rateLimit({
   max: 10000,
@@ -24,10 +39,9 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP',
 });
 
-app.use(limiter);
-
 // Endpoints
 app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/repairs', repairsRouter);
 
 // Global error handler
 app.use('*', globalErrorHandler);
